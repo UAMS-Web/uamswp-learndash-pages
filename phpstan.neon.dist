@@ -1,0 +1,41 @@
+# PHPStan for a WordPress plugin (UAMS-Web/uams-claude-skills#10), from the
+# code-quality skill's phpstan-wordpress.neon.dist template.
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    - vendor/pestphp/pest/extension.neon
+
+parameters:
+    # min is the supported floor (composer.json require.php); max is the development PHP.
+    phpVersion:
+        min: 80200
+        max: 80400
+
+    level: 0
+
+    paths:
+        - uamswp-learndash-pages.php
+        - tests
+
+    # Checkout-scoped cache; /.phpstan/ is in .gitignore.
+    tmpDir: .phpstan
+
+    excludePaths:
+        analyseAndScan:
+            - tests/Integration/vendor (?)
+
+    ignoreErrors:
+        # `$this` inside a closure passed to `uses()->beforeEach()` / `afterEach()` is bound
+        # by Pest at runtime, which PHPStan cannot see.
+        -
+            identifier: variable.undefined
+            message: '#^Undefined variable: \$this$#'
+            path: tests/Pest.php
+            reportUnmatched: false
+        # Pest routes its public API through classes it tags @internal; calling them from a
+        # test is Pest's intended use.
+        -
+            identifier: method.internalClass
+            message: '#of internal class Pest\#'
+            path: tests
+            reportUnmatched: false
