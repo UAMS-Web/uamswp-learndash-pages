@@ -5,13 +5,17 @@ declare(strict_types=1);
 Plugin Name: UAMS 2020 - Learndash
 Plugin URI: https://www.uams.edu/
 Description: Add clases for UAMS 2020 theme to Learndash pages
-Version: 1.0.0
+Version: 1.0.1
 Requires PHP: 8.2
 Author: Todd McKee
 Author URI:
 License: GPLv2 or later
 Text Domain: uamswp
 */
+
+// The header's Version is the only place the release number is written.
+define('UAMSWP_LEARNDASH_VERSION', get_file_data(__FILE__, ['Version' => 'Version'])['Version']);
+
 // * Add custom body class to the head
 add_filter('body_class', 'uamswp_learndash_body_class');
 function uamswp_learndash_body_class($classes)
@@ -30,7 +34,7 @@ function uamswp_learndash_css(): void
 {
     if (is_singular('sfwd-courses') || is_singular('sfwd-lessons')) {
         $dir = plugin_dir_url(__FILE__);
-        wp_enqueue_style('uamswp-learndash', $dir.'/uams-2020-learndash.css', [], '0.1.0', 'all');
+        wp_enqueue_style('uamswp-learndash', $dir.'/uams-2020-learndash.css', [], UAMSWP_LEARNDASH_VERSION, 'all');
     }
 }
 
