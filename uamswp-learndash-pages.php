@@ -16,7 +16,7 @@ Text Domain: uamswp
 // The header's Version is the only place the release number is written.
 define('UAMSWP_LEARNDASH_VERSION', get_file_data(__FILE__, ['Version' => 'Version'])['Version']);
 
-// * Add custom body class to the head
+// * Add a custom body class to the head
 add_filter('body_class', 'uamswp_learndash_body_class');
 function uamswp_learndash_body_class($classes)
 {
