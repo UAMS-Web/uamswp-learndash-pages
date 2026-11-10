@@ -41,6 +41,26 @@
       ]
     },
     {
+      "name": "pint",
+      "run": "vendor/bin/pint --test",
+      "paths": [
+        "**/*.php",
+        "!vendor/**",
+        "pint.json",
+        "composer.lock"
+      ]
+    },
+    {
+      "name": "phpstan",
+      "run": "vendor/bin/phpstan analyse --no-progress --memory-limit=2G",
+      "paths": [
+        "**/*.php",
+        "!vendor/**",
+        "phpstan.neon*",
+        "composer.lock"
+      ]
+    },
+    {
       "name": "pest",
       "run": "vendor/bin/pest",
       "paths": [

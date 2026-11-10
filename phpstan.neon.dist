@@ -36,6 +36,6 @@ parameters:
         # test is Pest's intended use.
         -
             identifier: method.internalClass
-            message: '#of internal class Pest\#'
+            message: '#of internal class Pest\\#'
             path: tests
             reportUnmatched: false
