@@ -1,0 +1,66 @@
+name: CI
+
+# Calls the shared job chain in UAMS-Web/uams-ci-workflows and adds the one job a ruleset
+# requires, `CI`. Adapted from .claude/skills/code-quality/templates/ci.yml in
+# UAMS-Web/uams-claude-skills.
+#
+# - The `uses:` reference names a release tag, never a branch, so a change to the shared chain
+#   reaches this repository only when the tag here moves.
+# - Gated on RUN_REMOTE_CI like the rest of CI: both jobs carry
+#   `if: vars.RUN_REMOTE_CI != 'false'`, so a private repository, where the variable is `false`,
+#   skips them before a runner is dispatched and bills no minutes. A skipped run is not a passing
+#   run: nothing has read the pull request while the switch is off.
+# - The `CI` job `needs:` every job in this file, so adding a job here means adding it to `needs:`
+#   in the same change (the code-quality skill's check-aggregate-needs.mjs checks it). Do not rename
+#   `CI`, and do not rename the `checks` job without changing `needs:`.
+# - The plugin switches on `floor-lint` and `download-archive`; `phpcs` and `mutate` stay off until
+#   the repository adopts them.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    if: vars.RUN_REMOTE_CI != 'false'
+    uses: UAMS-Web/uams-ci-workflows/.github/workflows/ci.yml@v0.9.0
+    with:
+      linux-only: true
+      mutate: false
+      floor-lint: true
+      floor-lint-php: '8.2'
+      floor-lint-command: git ls-files -z -- '*.php' ':!tests' | xargs -0 -n1 php -l
+      download-archive: true
+      download-archive-command: node .claude/skills/download-archive-check/check-download-archive.mjs
+      pest-command: composer test:unit
+
+  ci:
+    name: CI
+    needs: [checks]
+    if: always() && vars.RUN_REMOTE_CI != 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # `skipped` and `cancelled` fail as well as `failure`: a call that did not run proved nothing.
+      - name: Every needed job succeeded
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Needed job results: $RESULTS"
+          # An empty list would run no iterations and pass having read nothing.
+          if [ -z "$RESULTS" ]; then echo "::error::No needed job results to read"; exit 1; fi
+          for result in $RESULTS; do
+            if [ "$result" != "success" ]; then
+              echo "::error::A needed job reported $result"
+              exit 1
+            fi
+          done
