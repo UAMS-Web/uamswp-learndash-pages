@@ -1,3 +1,4 @@
+* text=auto eol=lf
 # Keep the GitHub download to what the plugin runs: exclude every top-level entry, then put
 # each runtime path back. A new runtime path needs its own -export-ignore line in the same change.
 /* export-ignore

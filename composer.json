@@ -8,7 +8,12 @@
     },
     "require-dev": {
         "brain/monkey": "^2.7",
-        "pestphp/pest": "^5.3"
+        "laravel/pint": "^1.32",
+        "pestphp/pest": "^5.3",
+        "php-stubs/wordpress-stubs": "^6.8",
+        "phpstan/phpstan": "^2.3",
+        "rector/rector": "^2.8",
+        "szepeviktor/phpstan-wordpress": "^2.0"
     },
     "config": {
         "platform": {
@@ -21,10 +26,24 @@
     },
     "scripts": {
         "test": "@test:unit",
-        "test:unit": "pest"
+        "test:unit": "pest",
+        "test:pint": "pint --test",
+        "test:refactor": "rector --dry-run",
+        "stan": "phpstan analyse --no-progress --memory-limit=2G",
+        "pint": "pint",
+        "refactor": "rector",
+        "test:refactor:sweep": "rector --dry-run --clear-cache --config=rector-sweep.php",
+        "refactor:sweep": "rector --config=rector-sweep.php"
     },
     "scripts-descriptions": {
         "test": "Run the test suite.",
-        "test:unit": "Run the Pest suite that needs no WordPress and no database."
+        "test:unit": "Run the Pest suite that needs no WordPress and no database.",
+        "test:pint": "Check formatting with Pint without changing files.",
+        "test:refactor": "Preview the Rector changes without applying them.",
+        "stan": "Run PHPStan.",
+        "pint": "Format the code with Pint.",
+        "refactor": "Apply the Rector changes.",
+        "test:refactor:sweep": "Preview the Rector sweep profile without applying it.",
+        "refactor:sweep": "Apply the Rector sweep profile."
     }
 }
