@@ -8,15 +8,14 @@
 
 declare(strict_types=1);
 
-use Brain\Monkey\Functions;
-
+use function Brain\Monkey\Functions\expect;
 use function Brain\Monkey\Functions\when;
 
 it('enqueues the stylesheet on a course or lesson', function (string $postType): void {
     when('is_singular')->alias(fn (string $type): bool => $type === $postType);
     when('plugin_dir_url')->justReturn('https://example.test/plugin/');
 
-    Functions\expect('wp_enqueue_style')
+    expect('wp_enqueue_style')
         ->once()
         ->with('uamswp-learndash', 'https://example.test/plugin//uams-2020-learndash.css', [], UAMSWP_LEARNDASH_VERSION, 'all');
 
@@ -30,7 +29,7 @@ it('does not enqueue the stylesheet on a quiz or any other page', function (stri
     when('is_singular')->alias(fn (string $type): bool => $type === $postType);
     when('plugin_dir_url')->justReturn('https://example.test/plugin/');
 
-    Functions\expect('wp_enqueue_style')->never();
+    expect('wp_enqueue_style')->never();
 
     uamswp_learndash_css();
 })->with([
