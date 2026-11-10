@@ -16,3 +16,12 @@ The suite also runs through the shared local CI runner, which a pull request nee
 ```bash
 node .claude/skills/local-ci/local-ci.mjs
 ```
+
+## Credits
+
+Developed and maintained by UAMS Web Services.
+
+Developers:
+
+- Josh Daugherty
+- Todd McKee
