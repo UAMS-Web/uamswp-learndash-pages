@@ -1,0 +1,6 @@
+# Keep the GitHub download to what the plugin runs: exclude every top-level entry, then put
+# each runtime path back. A new runtime path needs its own -export-ignore line in the same change.
+/* export-ignore
+/.* export-ignore
+/uamswp-learndash-pages.php -export-ignore
+/uams-2020-learndash.css -export-ignore
