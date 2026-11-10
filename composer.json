@@ -27,6 +27,7 @@
     "scripts": {
         "test": "@test:unit",
         "test:unit": "pest",
+        "mutate": "pest --mutate --path=uamswp-learndash-pages.php",
         "test:pint": "pint --test",
         "test:refactor": "rector --dry-run",
         "stan": "phpstan analyse --no-progress --memory-limit=2G",

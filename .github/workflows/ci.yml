@@ -13,8 +13,9 @@ name: CI
 # - The `CI` job `needs:` every job in this file, so adding a job here means adding it to `needs:`
 #   in the same change (the code-quality skill's check-aggregate-needs.mjs checks it). Do not rename
 #   `CI`, and do not rename the `checks` job without changing `needs:`.
-# - The plugin switches on `floor-lint` and `download-archive`; `phpcs` and `mutate` stay off until
-#   the repository adopts them.
+# - The plugin switches on `floor-lint` and `download-archive`; `phpcs` stays off until the repository
+#   adopts it. `mutate` is on: a pull request mutates the changed PHP files under `mutate-paths`, and a
+#   manual dispatch mutates everything `composer mutate` covers.
 
 on:
   pull_request:
@@ -35,7 +36,8 @@ jobs:
     uses: UAMS-Web/uams-ci-workflows/.github/workflows/ci.yml@v0.9.0
     with:
       linux-only: true
-      mutate: false
+      mutate-paths: uamswp-learndash-pages.php
+      mutate-ignore-paths: tests
       floor-lint: true
       floor-lint-php: '8.2'
       floor-lint-command: git ls-files -z -- '*.php' ':!tests' | xargs -0 -n1 php -l
