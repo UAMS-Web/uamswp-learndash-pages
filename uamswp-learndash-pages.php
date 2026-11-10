@@ -18,6 +18,12 @@ define('UAMSWP_LEARNDASH_VERSION', get_file_data(__FILE__, ['Version' => 'Versio
 
 // * Add custom body class to the head
 add_filter('body_class', 'uamswp_learndash_body_class');
+/**
+ * Add the default page template class on LearnDash course, lesson and quiz pages.
+ *
+ * @param  string[]  $classes  The body classes WordPress built for the request.
+ * @return string[]
+ */
 function uamswp_learndash_body_class($classes)
 {
 
