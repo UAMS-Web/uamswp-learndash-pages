@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 it('reads the version constant from the plugin header', function (): void {
     $header = (string) file_get_contents(__DIR__.'/../../uamswp-learndash-pages.php');
-    preg_match('/^Version:\s*(\S+)$/m', $header, $matches);
+    $version = preg_match('/^Version:\s*(\S+)$/m', $header, $matches) === 1 ? $matches[1] : null;
 
-    expect($matches[1])->toMatch('/^\d+\.\d+\.\d+$/')
-        ->and(UAMSWP_LEARNDASH_VERSION)->toBe($matches[1]);
+    expect($version)->toMatch('/^\d+\.\d+\.\d+$/')
+        ->and(UAMSWP_LEARNDASH_VERSION)->toBe($version);
 });
