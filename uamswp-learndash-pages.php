@@ -24,8 +24,9 @@ function uamswp_learndash_body_class($classes)
     return $classes;
 
 }
+
 add_action('wp_enqueue_scripts', 'uamswp_learndash_css');
-function uamswp_learndash_css()
+function uamswp_learndash_css(): void
 {
     if (is_singular('sfwd-courses') || is_singular('sfwd-lessons')) {
         $dir = plugin_dir_url(__FILE__);
@@ -34,7 +35,7 @@ function uamswp_learndash_css()
 }
 
 add_action('set_current_user', 'uamswp_hide_admin_bar');
-function uamswp_hide_admin_bar()
+function uamswp_hide_admin_bar(): void
 {
     if (! current_user_can('edit_posts')) {
         show_admin_bar(false);
