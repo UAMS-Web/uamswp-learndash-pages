@@ -11,7 +11,7 @@ parameters:
         min: 80200
         max: 80400
 
-    level: 0
+    level: 1
 
     paths:
         - uamswp-learndash-pages.php
@@ -29,7 +29,7 @@ parameters:
         # by Pest at runtime, which PHPStan cannot see.
         -
             identifier: variable.undefined
-            message: '#^Undefined variable: \$this$#'
+            message: '#^(Undefined variable: |Variable )\$this( might not be defined\.)?$#'
             path: tests/Pest.php
             reportUnmatched: false
         # Pest routes its public API through classes it tags @internal; calling them from a
