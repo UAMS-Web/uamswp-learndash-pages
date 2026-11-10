@@ -29,25 +29,36 @@ use function Brain\Monkey\tearDown;
  * file already loaded.
  *
  * The assertion count: Brain Monkey's expectations are Mockery expectations,
- * which PHPUnit does not count. Without adding them, a test whose only check is
- * `Functions\expect(...)->once()` reports as risky, and failOnRisky fails it.
+ * which PHPUnit does not count. A test whose only check is
+ * `Functions\expect(...)->once()` would report as risky, and failOnRisky fails
+ * it, so afterEach records one assertion whenever any expectation was set.
  */
+
+/**
+ * Stand-in for WordPress' get_file_data(): read each labelled header line of a file.
+ *
+ * @param  array<string, string>  $headers  Result key => header label.
+ * @return array<string, string>
+ */
+function pluginHeaderData(string $file, array $headers): array
+{
+    $source = (string) file_get_contents($file);
+    $data = [];
+
+    foreach ($headers as $key => $label) {
+        preg_match('/^\s*'.preg_quote($label, '/').':\s*(.*)$/mi', $source, $matches);
+        $data[$key] = trim($matches[1] ?? '');
+    }
+
+    return $data;
+}
+
 uses()
     ->beforeEach(function (): void {
         setUp();
 
         // get_file_data() is WordPress'; stand in for it by reading the plugin header the same way.
-        when('get_file_data')->alias(function (string $file, array $headers): array {
-            $source = (string) file_get_contents($file);
-            $data = [];
-
-            foreach ($headers as $key => $label) {
-                preg_match('/^\s*'.preg_quote($label, '/').':\s*(.*)$/mi', $source, $matches);
-                $data[$key] = trim($matches[1] ?? '');
-            }
-
-            return $data;
-        });
+        when('get_file_data')->alias(pluginHeaderData(...));
 
         $firstLoad = ! function_exists('uamswp_learndash_body_class');
 
@@ -60,11 +71,16 @@ uses()
         require_once __DIR__.'/../uamswp-learndash-pages.php';
 
         if ($firstLoad) {
-            $this->assertMatchesRegularExpression('/^\d+\.\d+\.\d+$/', UAMSWP_LEARNDASH_VERSION);
+            expect(UAMSWP_LEARNDASH_VERSION)->toMatch('/^\d+\.\d+\.\d+$/');
         }
     })
     ->afterEach(function (): void {
-        $this->addToAssertionCount(Mockery::getContainer()->mockery_getExpectationCount());
+        // Mockery expectations are not counted by PHPUnit; record one assertion when any were set.
+        $expectations = Mockery::getContainer()->mockery_getExpectationCount();
+
+        if ($expectations > 0) {
+            expect($expectations)->toBeGreaterThan(0);
+        }
 
         tearDown();
     })
