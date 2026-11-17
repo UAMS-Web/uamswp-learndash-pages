@@ -6,6 +6,7 @@ Plugin Name: UAMS 2020 - Learndash
 Plugin URI: https://www.uams.edu/
 Description: Add clases for UAMS 2020 theme to Learndash pages
 Version: 1.0.2
+Requires at least: 6.8
 Requires PHP: 8.2
 Author: UAMS Web Services
 Author URI: https://communications.uams.edu/web/
