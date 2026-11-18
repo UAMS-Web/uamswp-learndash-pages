@@ -1,0 +1,7 @@
+{
+  "version": "0.2",
+  "language": "en-US",
+  "description": "Every word below is a name that cannot be reworded: UAMS is the organization, uamswp and learndash are parts of this plugin's slug and file names, and sfwd is the prefix of LearnDash's post types (sfwd-courses, sfwd-lessons, sfwd-quiz).",
+  "words": ["learndash", "sfwd", "UAMS", "uamswp"],
+  "ignorePaths": ["vendor/**", "composer.lock", ".claude/**", ".agents/**", ".cursor/**"]
+}
