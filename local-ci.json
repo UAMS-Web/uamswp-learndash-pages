@@ -71,6 +71,13 @@
       ]
     },
     {
+      "name": "changed-tests",
+      "run": "node .claude/skills/pest-testing/scripts/changed-tests-against-base.mjs --base origin/main --tests tests/Unit",
+      "paths": [
+        "tests/Unit/**"
+      ]
+    },
+    {
       "name": "pest",
       "run": "vendor/bin/pest",
       "paths": [
