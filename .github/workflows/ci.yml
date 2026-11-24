@@ -50,6 +50,10 @@ jobs:
       download-archive: true
       download-archive-command: node .claude/skills/download-archive-check/check-download-archive.mjs
       pest-command: composer test:unit
+      # PARITY: the `changed-tests` job in local-ci.json runs the same script over the same
+      # directory. Change `changed-tests-paths` here and its `--tests` argument and `paths` there together.
+      changed-tests: true
+      changed-tests-paths: tests/Unit
 
   ci:
     name: CI
